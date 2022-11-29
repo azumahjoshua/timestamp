@@ -25,27 +25,41 @@ app.get("/", function (req, res) {
 // });
 
 
-app.get("/api/:date",(req,res)=>{
+app.get("/api/:date?",(req,res)=>{
   regexExprss = /^\d{0,}$/
   let dateParam = req.params.date
   
+  if(!dateParam){
+    const timeElapsed = Date.now();
+    // console.log(timeElapsed)
+    let newdatenow = new Date()
+    // console.log(newdatenow)
+    res.json({"unix":timeElapsed, "utc":newdatenow.toUTCString()})
+  }
   // console.log(dateParam)
   if(regexExprss.test(dateParam)){
     dateParam = parseInt(dateParam)
     // console.log("Unix: ", dateParam)
   }
-
-  let newDate = new Date(dateParam)
+  let date_string = new Date(dateParam)
   // console.log("New Date: "+newDate.toString())
   
   // res.json({"unix":, "utc":""})
   // console.log(dateParam)
-  if(newDate.toString() === "Invalid Date"){
+  if(date_string.toString() === "Invalid Date"){
     res.json({
       error : "Invalid Date"
     })
-  }else{
-  res.json({"unix":dateParam, "utc":newDate.toUTCString()})
+  }
+  // }else if(!dateParam){
+  //   const timeElapsed = Date.now();
+  //   console.log(timeElapsed)
+  //   let newdatenow = new Date()
+  //   console.log(newdatenow)
+  //   res.json({"unix":timeElapsed, "utc":newdatenow.toUTCString()})
+  // }
+  else{
+  res.json({"unix":date_string.valueOf(), "utc":date_string.toUTCString()})
   }
 })
 // listen for requests :)
